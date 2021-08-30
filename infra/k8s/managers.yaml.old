@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: managers
+spec:
+  containers:
+    - name: managers
+      image: yassineelk/managers:0.0.1
+      
+

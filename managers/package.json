@@ -7,7 +7,7 @@
     "dev": "nodemon --config nodemon.json src/app.ts"
   },
   "dependencies": {
-    "@fastalab/common": "^1.0.5",
+    "@fastalab/common": "^1.0.12",
     "bcrypt": "^5.0.1",
     "config": "^3.3.6",
     "cors": "^2.8.5",

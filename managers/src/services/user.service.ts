@@ -1,12 +1,11 @@
-import { DocumentDefinition, FilterQuery } from "mongoose";
-import { omit } from "lodash";
+import { DocumentDefinition, FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
 import User, { UserDocument } from "../models/user.model";
 
 export async function createUser(input: DocumentDefinition<UserDocument>) {
   try {
     return await User.create(input);
   } catch (error) {
-    throw new Error(error);
+    throw new Error((error as string));
   }
 }
 
@@ -14,36 +13,11 @@ export async function findUser(query: FilterQuery<UserDocument>) {
   return User.findOne(query).lean();
 }
 
-export async function validatePassword({
-  email,
-  password,
-}: {
-  email: UserDocument["email"];
-  password: string;
-}) {
-  const user = await User.findOne({ email });
 
-  if (!user) {
-    return false;
-  }
-
-  const isValid = await user.comparePassword(password);
-
-  if (!isValid) {
-    return false;
-  }
-
-  return omit(user.toJSON(), "password");
-}
-
-export async function isDisabled(email: UserDocument["email"]) {
-  const user = await User.findOne({ email });
-  
-  if (!user) {
-    return true;
-  }
-
-  if(user.disabled) {
-    return true;
-  }
+export async function findAndUpdate(
+  query: FilterQuery<UserDocument>,
+  update: UpdateQuery<UserDocument>,
+  options: QueryOptions
+){
+  return User.findOneAndUpdate(query,update,options);
 }

@@ -1,62 +1,17 @@
 import { Express, Request, Response } from "express";
-import {
-  createPostHandler,
-  updatePostHandler,
-  getPostHandler,
-  deletePostHandler,
-} from "./controllers/post.controller";
-import { createUserHandler } from "./controllers/user.controller";
-import { validateRequest, requiresUser } from "@fastalab/common";
-import {
-  createUserSchema,
-  createUserSessionSchema,
-} from "./schemas/user.schema";
-import {
-  createPostSchema,
-  updatePostSchema,
-  deletePostSchema,
-} from "./schemas/post.schema";
+import { requiresUser, validateRequest } from "@fastalab/common";
+import { createUserHandler, getUserHandler, updateUserHandler } from "./controllers/user.controller";
+import { createUserSchema, updateUserSchema } from "./schemas/user.schema";
+
 
 export default function (app: Express) {
   app.get("/healthcheck", (req: Request, res: Response) => res.sendStatus(200));
 
-  // Register user
-  app.post("/api/users", validateRequest(createUserSchema), createUserHandler);
+  app.post("/users",validateRequest(createUserSchema), createUserHandler);
 
-  // Login
-  // app.post(
-  //   "/api/sessions",
-  //   validateRequest(createUserSessionSchema),
-  //   createUserSessionHandler
-  // );
+  app.get("/users/:uid",getUserHandler);
+  
+  app.put("/users/:uid",validateRequest(updateUserSchema),updateUserHandler);
 
-  // Get the user's sessions
-  // app.get("/api/sessions", requiresUser, getUserSessionsHandler);
-
-  // Logout
-  // app.delete("/api/sessions", requiresUser, invalidateUserSessionHandler);
-
-  // Create a post
-  app.post(
-    "/api/posts",
-    [requiresUser, validateRequest(createPostSchema)],
-    createPostHandler
-  );
-
-  // Update a post
-  app.put(
-    "/api/posts/:postId",
-    [requiresUser, validateRequest(updatePostSchema)],
-    updatePostHandler
-  );
-
-  // Get a post
-  app.get("/api/posts/:postId", getPostHandler);
-
-  // Delete a post
-  app.delete(
-    "/api/posts/:postId",
-    [requiresUser, validateRequest(deletePostSchema)],
-    deletePostHandler
-  );
+  
 }
