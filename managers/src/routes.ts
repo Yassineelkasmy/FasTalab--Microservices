@@ -5,13 +5,19 @@ import { createUserSchema, updateUserSchema } from "./schemas/user.schema";
 
 
 export default function (app: Express) {
+  
   app.get("/healthcheck", (req: Request, res: Response) => res.sendStatus(200));
 
-  app.post("/users",validateRequest(createUserSchema), createUserHandler);
+  app.post("/users",
+    [requiresUser,validateRequest(createUserSchema)],
+    createUserHandler
+  );
 
-  app.get("/users/:uid",getUserHandler);
+  app.get("/users/",requiresUser,getUserHandler);
   
-  app.put("/users/:uid",validateRequest(updateUserSchema),updateUserHandler);
-
+  app.put("/users/",
+    [requiresUser,validateRequest(updateUserSchema)],
+    updateUserHandler
+  );
   
 }
